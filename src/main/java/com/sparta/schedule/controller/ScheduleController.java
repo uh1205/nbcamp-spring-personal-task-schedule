@@ -1,11 +1,14 @@
 package com.sparta.schedule.controller;
 
+import com.sparta.schedule.dto.Result;
 import com.sparta.schedule.dto.create.CreateScheduleReq;
 import com.sparta.schedule.dto.create.CreateScheduleRes;
 import com.sparta.schedule.dto.read.ReadScheduleRes;
 import com.sparta.schedule.dto.update.UpdateScheduleRes;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.service.ScheduleService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +29,8 @@ public class ScheduleController {
 
     // R
     @GetMapping
-    public List<ReadScheduleRes> getScheduleList() {
-        return scheduleService.getScheduleList();
+    public Result<List<ReadScheduleRes>> getScheduleList() {
+        return new Result<>(scheduleService.getScheduleList());
     }
 
     @GetMapping("/{id}")
@@ -46,5 +49,6 @@ public class ScheduleController {
     public Long deleteSchedule(@PathVariable Long id, @RequestBody CreateScheduleReq reqDto) {
         return scheduleService.deleteSchedule(id, reqDto);
     }
+
 }
 
