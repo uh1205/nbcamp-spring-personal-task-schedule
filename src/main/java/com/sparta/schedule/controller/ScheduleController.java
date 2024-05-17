@@ -2,6 +2,7 @@ package com.sparta.schedule.controller;
 
 import com.sparta.schedule.dto.create.CreateScheduleReq;
 import com.sparta.schedule.dto.create.CreateScheduleRes;
+import com.sparta.schedule.dto.read.ReadScheduleRes;
 import com.sparta.schedule.dto.update.UpdateScheduleRes;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.service.ScheduleService;
@@ -12,25 +13,26 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/schedules")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
     // C
-    @PostMapping("/new")
+    @PostMapping
     public CreateScheduleRes createSchedule(@RequestBody CreateScheduleReq req) {
         return scheduleService.createSchedule(req);
     }
 
     // R
-    @GetMapping("/{id}")
-    public CreateScheduleRes getScheduleById(@PathVariable Long id) {
-        return scheduleService.getScheduleById(id);
+    @GetMapping
+    public List<ReadScheduleRes> getScheduleList() {
+        return scheduleService.getScheduleList();
     }
 
-    @GetMapping("/schedules")
-    public List<CreateScheduleRes> getScheduleList() {
-        return scheduleService.getScheduleList();
+    @GetMapping("/{id}")
+    public ReadScheduleRes getScheduleById(@PathVariable Long id) {
+        return scheduleService.getScheduleById(id);
     }
 
     // U

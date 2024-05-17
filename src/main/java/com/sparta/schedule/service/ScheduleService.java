@@ -2,6 +2,7 @@ package com.sparta.schedule.service;
 
 import com.sparta.schedule.dto.create.CreateScheduleReq;
 import com.sparta.schedule.dto.create.CreateScheduleRes;
+import com.sparta.schedule.dto.read.ReadScheduleRes;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.reporitory.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +29,13 @@ public class ScheduleService {
     /**
      * Read
      */
-    public CreateScheduleRes getScheduleById(Long id) {
-        return new CreateScheduleRes(findSchedule(id));
+    public ReadScheduleRes getScheduleById(Long id) {
+        return new ReadScheduleRes(findSchedule(id));
     }
 
-    public List<CreateScheduleRes> getScheduleList() {
+    public List<ReadScheduleRes> getScheduleList() {
         return scheduleRepository.findAllByOrderByCreatedDateDesc().stream()
-                .map(CreateScheduleRes::new).toList();
+                .map(ReadScheduleRes::new).toList();
     }
 
 

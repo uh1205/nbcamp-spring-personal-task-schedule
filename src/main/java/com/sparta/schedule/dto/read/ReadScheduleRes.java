@@ -1,4 +1,4 @@
-package com.sparta.schedule.dto.create;
+package com.sparta.schedule.dto.read;
 
 import com.sparta.schedule.entity.Schedule;
 import lombok.Getter;
@@ -6,21 +6,19 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class CreateScheduleRes {
+public class ReadScheduleRes {
 
     private Long id;
     private String title;
     private String content;
     private String manager;
-    private String password;
     private LocalDate createDate;
 
-    public CreateScheduleRes(Schedule schedule) {
+    public ReadScheduleRes(Schedule schedule) {
         this.id = schedule.getId();
         this.title = schedule.getTitle();
         this.content = schedule.getContent();
         this.manager = schedule.getManager();
-        this.password = schedule.getPassword();
         this.createDate = schedule.getCreatedDate();
     }
 }
