@@ -45,22 +45,17 @@ public class ScheduleService {
     @Transactional
     public Schedule updateSchedule(Long id, CreateScheduleReq req) {
         Schedule schedule = findSchedule(id);
-        if (!schedule.getPassword().equals(req.getPassword())) {
-            throw new IllegalArgumentException("Wrong password");
-        }
+        checkPassword(req, schedule);
         schedule.update(req);
         return schedule;
     }
-
 
     /**
      * Delete
      */
     public Long deleteSchedule(Long id, CreateScheduleReq req) {
         Schedule schedule = findSchedule(id);
-        if (!schedule.getPassword().equals(req.getPassword())) {
-            throw new IllegalArgumentException("Wrong password");
-        }
+        checkPassword(req, schedule);
         scheduleRepository.delete(schedule);
         return id;
     }
@@ -68,6 +63,12 @@ public class ScheduleService {
     private Schedule findSchedule(Long id) {
         return scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Schedule not found"));
+    }
+
+    private static void checkPassword(CreateScheduleReq req, Schedule schedule) {
+        if (!schedule.getPassword().equals(req.getPassword())) {
+            throw new IllegalArgumentException("Wrong password");
+        }
     }
 
 }
