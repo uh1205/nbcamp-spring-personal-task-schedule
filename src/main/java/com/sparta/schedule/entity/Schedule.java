@@ -31,7 +31,7 @@ public class Schedule extends Timestamped {
     private User user;
 
     @OneToMany(mappedBy = "schedule")
-    private List<Comment> comments = new ArrayList<>();
+    private final List<Comment> comments = new ArrayList<>();
 
     public Schedule(CreateScheduleRequest request, User user) {
         this.title = request.getTitle();

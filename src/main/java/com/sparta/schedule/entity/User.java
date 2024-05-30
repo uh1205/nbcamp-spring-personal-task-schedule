@@ -33,10 +33,10 @@ public class User extends Timestamped {
     private UserRoleEnum role;
 
     @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<>();
+    private final List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "schedule")
-    private List<Schedule> schedules = new ArrayList<>();
+    private final List<Schedule> schedules = new ArrayList<>();
 
     public User(String nickname, String username, String password, UserRoleEnum role) {
         this.nickname = nickname;
