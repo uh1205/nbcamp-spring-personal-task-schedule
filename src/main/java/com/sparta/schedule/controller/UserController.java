@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Slf4j
+@Slf4j(topic = "UserController")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -47,7 +47,7 @@ public class UserController {
                             .data(null)
                             .build());
         }
-        // 회원가입 성공
+
         User user = userService.signup(request);
         SignupResponse response = new SignupResponse(user);
 

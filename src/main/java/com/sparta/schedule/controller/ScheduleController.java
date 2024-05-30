@@ -5,6 +5,7 @@ import com.sparta.schedule.dto.schedule.*;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.security.UserDetailsImpl;
 import com.sparta.schedule.service.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ScheduleController {
      */
     @PostMapping
     public ResponseEntity<CommonResponse<CreateScheduleResponse>> createSchedule(
-            @RequestBody CreateScheduleRequest request,
+            @Valid @RequestBody CreateScheduleRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         Schedule schedule = scheduleService.createSchedule(request, userDetails.getUser());

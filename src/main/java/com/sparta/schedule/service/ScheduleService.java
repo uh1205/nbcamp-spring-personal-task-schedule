@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -63,8 +64,11 @@ public class ScheduleService {
 
     private Schedule findScheduleAndVerifyUser(Long id, User user) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Schedule not found"));
-        schedule.checkUser(user);
+                () -> new IllegalArgumentException("해당 일정을 찾을 수 없습니다."));
+
+        if (!Objects.equals(schedule.getUser().getId(), user.getId())) {
+            throw new IllegalArgumentException("해당 일정의 작성자가 아닙니다.");
+        }
 
         return schedule;
     }

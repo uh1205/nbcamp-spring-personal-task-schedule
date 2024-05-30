@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -59,9 +60,12 @@ public class CommentService {
 
     private Comment findCommentAndVerifyUser(Long id, User user) {
         Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Comment not found")
+                () -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.")
         );
-        comment.checkUser(user);
+
+        if (!Objects.equals(comment.getUser().getId(), user.getId())) {
+            throw new IllegalArgumentException("해당 댓글의 작성자가 아닙니다.");
+        }
 
         return comment;
     }

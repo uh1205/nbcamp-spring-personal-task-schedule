@@ -32,18 +32,10 @@ public class Schedule extends Timestamped {
     @OneToMany(mappedBy = "schedule")
     private final List<Comment> comments = new ArrayList<>();
 
-
-
     public Schedule(CreateScheduleRequest request, User user) {
         this.title = request.getTitle();
         this.content = request.getContent();
         this.user = user;
-    }
-
-    public void checkUser(User user) {
-        if (!user.equals(this.user)) {
-            throw new IllegalArgumentException("User does not belong to this schedule");
-        }
     }
 
     public void update(UpdateScheduleRequest request) {

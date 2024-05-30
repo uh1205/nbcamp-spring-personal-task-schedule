@@ -15,24 +15,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
-@Slf4j(topic = "ERROR_FILE_LOGGER")
+@Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtProvider jwtProvider;
 
     public JwtAuthenticationFilter(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
-        setFilterProcessesUrl("/api/user/login");
+        setFilterProcessesUrl("/login");
     }
 
+    /**
+     * 로그인 시도
+     */
     @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest req, HttpServletResponse res
-    ) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
         try {
-            LoginRequest loginRequest = new ObjectMapper().readValue(
-                    req.getInputStream(), LoginRequest.class
-            );
+            // json to object
+            LoginRequest loginRequest = new ObjectMapper()
+                    .readValue(req.getInputStream(), LoginRequest.class);
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -47,10 +48,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
+    /**
+     * 로그인 성공 및 JWT 생성
+     */
     @Override
-    protected void successfulAuthentication(
-            HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authResult
-    ) {
+    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authResult) {
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
@@ -58,11 +60,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         res.addHeader(JwtProvider.AUTHORIZATION_HEADER, token);
     }
 
+    /**
+     * 로그인 실패
+     */
     @Override
-    protected void unsuccessfulAuthentication(
-            HttpServletRequest req, HttpServletResponse res, AuthenticationException failed
-    ) {
-        res.setStatus(401);
+    protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse res, AuthenticationException failed) {
+        log.error(failed.getMessage());
+        res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
 }

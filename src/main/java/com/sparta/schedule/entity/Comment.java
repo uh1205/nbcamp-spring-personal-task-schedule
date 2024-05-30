@@ -27,18 +27,10 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-
-
     public Comment(CreateCommentRequest request, User user, Schedule schedule) {
         this.content = request.getContent();
         this.user = user;
         this.schedule = schedule;
-    }
-
-    public void checkUser(User user) {
-        if (!user.equals(this.user)) {
-            throw new IllegalArgumentException("User does not belong to this comment");
-        }
     }
 
     public void update(UpdateCommentRequest request) {

@@ -15,7 +15,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-@Slf4j(topic = "ERROR_FILE_LOGGER")
+@Slf4j(topic = "JwtProvider")
 public class JwtProvider {
 
     // Header KEY 값
@@ -53,7 +53,7 @@ public class JwtProvider {
                         .compact();
     }
 
-    // header 에서 JWT 가져오기
+    // 헤더에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {

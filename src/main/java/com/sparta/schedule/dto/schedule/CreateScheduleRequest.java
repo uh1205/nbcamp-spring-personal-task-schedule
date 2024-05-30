@@ -1,8 +1,8 @@
 package com.sparta.schedule.dto.schedule;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class CreateScheduleRequest {
 
     private String title;
