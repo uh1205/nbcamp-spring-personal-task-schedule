@@ -43,7 +43,7 @@ public class CommentController {
      * 해당 일정의 모든 댓글 불러오기
      */
     @GetMapping
-    public ResponseEntity<CommonResponse<List<ReadCommentResponse>>> getComments(Long scheduleId) {
+    public ResponseEntity<CommonResponse<List<ReadCommentResponse>>> getComments(@RequestParam Long scheduleId) {
         List<ReadCommentResponse> response = commentService.getComments(scheduleId)
                 .stream().map(ReadCommentResponse::new).toList();
 
