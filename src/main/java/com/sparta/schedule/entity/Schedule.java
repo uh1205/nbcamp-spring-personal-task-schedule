@@ -1,9 +1,14 @@
 package com.sparta.schedule.entity;
 
-import com.sparta.schedule.dto.create.CreateScheduleReq;
+import com.sparta.schedule.Timestamped;
+import com.sparta.schedule.dto.schedule.CreateScheduleRequest;
+import com.sparta.schedule.dto.schedule.UpdateScheduleRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,23 +26,31 @@ public class Schedule extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String manager;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(nullable = false)
-    private String password;
+    @OneToMany(mappedBy = "schedule")
+    private List<Comment> comments = new ArrayList<>();
 
-    public Schedule(CreateScheduleReq reqDto) {
-        this.title = reqDto.getTitle();
-        this.content = reqDto.getContent();
-        this.manager = reqDto.getManager();
-        this.password = reqDto.getPassword();
+    public Schedule(CreateScheduleRequest request, User user) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.user = user;
     }
 
-    public void update(CreateScheduleReq reqDto) {
-        this.title = reqDto.getTitle();
-        this.content = reqDto.getContent();
-        this.manager = reqDto.getManager();
-        this.password = reqDto.getPassword();
+    public void checkUser(User user) {
+        if (!user.equals(this.user)) {
+            throw new IllegalArgumentException("User does not belong to this schedule");
+        }
+    }
+
+    public void update(UpdateScheduleRequest request) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 }
