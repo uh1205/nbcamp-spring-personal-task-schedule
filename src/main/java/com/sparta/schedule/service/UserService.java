@@ -2,7 +2,7 @@ package com.sparta.schedule.service;
 
 import com.sparta.schedule.dto.user.SignupRequest;
 import com.sparta.schedule.entity.User;
-import com.sparta.schedule.UserRoleEnum;
+import com.sparta.schedule.entity.UserRoleEnum;
 import com.sparta.schedule.reporitory.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +35,8 @@ public class UserService {
 
         // 사용자 등록
         String nickname = request.getNickname();
-        String password = passwordEncoder.encode(request.getPassword());
+        String password = request.getPassword();
+//        String password = passwordEncoder.encode(request.getPassword());
 
         User user = new User(nickname, username, password, role);
         userRepository.save(user);

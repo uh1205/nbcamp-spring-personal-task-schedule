@@ -1,7 +1,5 @@
 package com.sparta.schedule.entity;
 
-import com.sparta.schedule.Timestamped;
-import com.sparta.schedule.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +17,7 @@ public class User extends Timestamped {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickname;
 
     @Column(nullable = false, unique = true)
@@ -35,7 +33,7 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user")
     private final List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "schedule")
+    @OneToMany(mappedBy = "user")
     private final List<Schedule> schedules = new ArrayList<>();
 
     public User(String nickname, String username, String password, UserRoleEnum role) {

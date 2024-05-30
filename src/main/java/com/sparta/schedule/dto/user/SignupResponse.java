@@ -1,7 +1,7 @@
 package com.sparta.schedule.dto.user;
 
 import com.sparta.schedule.entity.User;
-import com.sparta.schedule.UserRoleEnum;
+import com.sparta.schedule.entity.UserRoleEnum;
 import lombok.Getter;
 
 import java.time.LocalDate;

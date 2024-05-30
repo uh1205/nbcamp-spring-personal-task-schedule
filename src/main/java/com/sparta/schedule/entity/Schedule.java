@@ -1,6 +1,5 @@
 package com.sparta.schedule.entity;
 
-import com.sparta.schedule.Timestamped;
 import com.sparta.schedule.dto.schedule.CreateScheduleRequest;
 import com.sparta.schedule.dto.schedule.UpdateScheduleRequest;
 import jakarta.persistence.*;
@@ -32,6 +31,8 @@ public class Schedule extends Timestamped {
 
     @OneToMany(mappedBy = "schedule")
     private final List<Comment> comments = new ArrayList<>();
+
+
 
     public Schedule(CreateScheduleRequest request, User user) {
         this.title = request.getTitle();

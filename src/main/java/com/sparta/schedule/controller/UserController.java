@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,15 +27,18 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * 회원가입
+     */
     @PostMapping
     public ResponseEntity<CommonResponse<SignupResponse>> signup(
-            @Valid SignupRequest request, BindingResult bindingResult
+            @Valid @RequestBody SignupRequest request, BindingResult bindingResult
     ) {
         // 예외 처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (!fieldErrors.isEmpty()) {
             for (FieldError fieldError : fieldErrors) {
-                log.error(fieldError.getDefaultMessage());
+                log.error("{} 필드 : {}", fieldError.getField(), fieldError.getDefaultMessage());
             }
             return ResponseEntity.badRequest()
                     .body(CommonResponse.<SignupResponse>builder()

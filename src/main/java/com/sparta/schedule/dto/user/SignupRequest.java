@@ -21,6 +21,6 @@ public class SignupRequest {
 
     private boolean admin = false;
 
-    private String adminToken = "";
+    private String adminToken = ""; // AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC
 
 }

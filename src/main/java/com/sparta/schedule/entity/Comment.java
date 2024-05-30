@@ -1,6 +1,5 @@
 package com.sparta.schedule.entity;
 
-import com.sparta.schedule.Timestamped;
 import com.sparta.schedule.dto.comment.CreateCommentRequest;
 import com.sparta.schedule.dto.comment.UpdateCommentRequest;
 import jakarta.persistence.*;
@@ -17,6 +16,7 @@ public class Comment extends Timestamped {
     @Column(name = "comment_id")
     private Long id;
 
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,6 +26,8 @@ public class Comment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
+
+
 
     public Comment(CreateCommentRequest request, User user, Schedule schedule) {
         this.content = request.getContent();
