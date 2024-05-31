@@ -8,17 +8,15 @@ import com.sparta.schedule.security.UserDetailsImpl;
 import com.sparta.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j(topic = "ScheduleController")
+import static com.sparta.schedule.controller.ControllerUtils.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/schedules")
@@ -34,103 +32,93 @@ public class ScheduleController {
             @Valid @RequestBody ScheduleRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             BindingResult bindingResult
-    ) {
+    ) throws IllegalArgumentException {
         // 예외 처리
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        if (!fieldErrors.isEmpty()) {
-            for (FieldError fieldError : fieldErrors) {
-                log.error("{} 필드 : {}", fieldError.getField(), fieldError.getDefaultMessage());
-            }
-            return ResponseEntity.badRequest()
-                    .body(CommonResponse.<List<FieldError>>builder()
-                            .statusCode(HttpStatus.BAD_REQUEST.value())
-                            .msg("일정 생성 실패")
-                            .data(fieldErrors)
-                            .build());
+        if (bindingResult.hasErrors()) {
+            return getFieldErrorResponseEntity(bindingResult, "Failed to create schedule");
         }
+        try {
+            Schedule schedule = scheduleService.createSchedule(request, userDetails.getUser());
+            ScheduleResponse response = new ScheduleResponse(schedule);
+            return getResponseEntity(response, "Schedule created successfully");
 
-        Schedule schedule = scheduleService.createSchedule(request, userDetails.getUser());
-        ScheduleResponse response = new ScheduleResponse(schedule);
-
-        return ResponseEntity.ok()
-                .body(CommonResponse.<ScheduleResponse>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .msg("일정 생성 성공")
-                        .data(response)
-                        .build());
+        } catch (Exception e) {
+            return getBadRequestResponseEntity(e);
+        }
     }
 
     /**
      * 모든 일정 조회
      */
     @GetMapping
-    public ResponseEntity<CommonResponse<List<ScheduleResponse>>> getSchedules() {
+    public ResponseEntity<CommonResponse<?>> getSchedules() {
         List<ScheduleResponse> response = scheduleService.getSchedules()
                 .stream().map(ScheduleResponse::new).toList();
 
-        return ResponseEntity.ok()
-                .body(CommonResponse.<List<ScheduleResponse>>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .msg("모든 일정 불러오기 성공")
-                        .data(response)
-                        .build());
+        return getResponseEntity(response, "Retrieved all schedules successfully");
     }
 
     /**
      * 일정 조회
      */
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse<ScheduleResponse>> getSchedule(
+    public ResponseEntity<CommonResponse<?>> getSchedule(
             @PathVariable Long scheduleId
-    ) {
-        Schedule schedule = scheduleService.getSchedule(scheduleId);
-        ScheduleResponse response = new ScheduleResponse(schedule);
+    ) throws IllegalArgumentException {
+        try {
+            Schedule schedule = scheduleService.getSchedule(scheduleId);
+            ScheduleResponse response = new ScheduleResponse(schedule);
 
-        return ResponseEntity.ok()
-                .body(CommonResponse.<ScheduleResponse>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .msg("일정 불러오기 성공")
-                        .data(response)
-                        .build());
+            return getResponseEntity(response, "Retrieved schedule successfully");
+
+        } catch (Exception e) {
+            return getBadRequestResponseEntity(e);
+        }
     }
 
     /**
      * 일정 수정
      */
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse<ScheduleResponse>> updateSchedule(
+    public ResponseEntity<CommonResponse<?>> updateSchedule(
             @PathVariable Long scheduleId,
             @Valid @RequestBody ScheduleRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             BindingResult bindingResult
-    ) {
-        Schedule schedule = scheduleService.updateSchedule(scheduleId, request, userDetails.getUser());
-        ScheduleResponse response = new ScheduleResponse(schedule);
+    ) throws IllegalArgumentException {
+        // 예외 처리
+        if (bindingResult.hasErrors()) {
+            return getFieldErrorResponseEntity(bindingResult, "Failed to update schedule");
+        }
+        try {
+            Schedule schedule = scheduleService.updateSchedule(scheduleId, request, userDetails.getUser());
+            ScheduleResponse response = new ScheduleResponse(schedule);
 
-        return ResponseEntity.ok()
-                .body(CommonResponse.<ScheduleResponse>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .msg("일정 수정 성공")
-                        .data(response)
-                        .build());
+            return getResponseEntity(response, "Schedule updated successfully");
+
+        } catch (Exception e) {
+            return getBadRequestResponseEntity(e);
+        }
+
     }
 
     /**
      * 일정 삭제
      */
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse<Long>> deleteSchedule(
+    public ResponseEntity<CommonResponse<?>> deleteSchedule(
             @PathVariable Long scheduleId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        Long response = scheduleService.deleteSchedule(scheduleId, userDetails.getUser());
+    ) throws IllegalArgumentException {
+        try {
+            Long response = scheduleService.deleteSchedule(scheduleId, userDetails.getUser());
 
-        return ResponseEntity.ok()
-                .body(CommonResponse.<Long>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .msg("일정 삭제 성공")
-                        .data(response)
-                        .build());
+            return getResponseEntity(response, "Schedule deleted successfully");
+
+        } catch (Exception e) {
+            return getBadRequestResponseEntity(e);
+        }
+
     }
 
 }
