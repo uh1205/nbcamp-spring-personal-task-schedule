@@ -60,7 +60,9 @@ public class ScheduleController {
      * 일정 조회
      */
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse<ScheduleResponse>> getSchedule(@PathVariable Long scheduleId) {
+    public ResponseEntity<CommonResponse<ScheduleResponse>> getSchedule(
+            @PathVariable Long scheduleId
+    ) {
         Schedule schedule = scheduleService.getSchedule(scheduleId);
         ScheduleResponse response = new ScheduleResponse(schedule);
 
