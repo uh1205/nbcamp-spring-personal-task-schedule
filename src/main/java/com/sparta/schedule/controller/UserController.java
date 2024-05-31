@@ -31,9 +31,10 @@ public class UserController {
      * 회원가입
      */
     @PostMapping
-    public ResponseEntity<CommonResponse<SignupResponse>> signup(
-            @Valid @RequestBody SignupRequest request, BindingResult bindingResult
-    ) {
+    public ResponseEntity<CommonResponse<?>> signup(
+            @Valid @RequestBody SignupRequest request,
+            BindingResult bindingResult
+    ) throws IllegalArgumentException {
         // 예외 처리
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
         if (!fieldErrors.isEmpty()) {
@@ -41,22 +42,31 @@ public class UserController {
                 log.error("{} 필드 : {}", fieldError.getField(), fieldError.getDefaultMessage());
             }
             return ResponseEntity.badRequest()
-                    .body(CommonResponse.<SignupResponse>builder()
+                    .body(CommonResponse.<List<FieldError>>builder()
                             .statusCode(HttpStatus.BAD_REQUEST.value())
                             .msg("회원가입 실패")
-                            .data(null)
+                            .data(fieldErrors)
                             .build());
         }
 
-        User user = userService.signup(request);
-        SignupResponse response = new SignupResponse(user);
+        try {
+            User user = userService.signup(request);
+            SignupResponse response = new SignupResponse(user);
 
-        return ResponseEntity.ok()
-                .body(CommonResponse.<SignupResponse>builder()
-                        .statusCode(HttpStatus.OK.value())
-                        .msg("회원가입 성공")
-                        .data(response)
-                        .build());
+            return ResponseEntity.ok()
+                    .body(CommonResponse.<SignupResponse>builder()
+                            .statusCode(HttpStatus.OK.value())
+                            .msg("회원가입 성공")
+                            .data(response)
+                            .build());
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(CommonResponse.builder()
+                            .statusCode(HttpStatus.BAD_REQUEST.value())
+                            .msg(e.getMessage())
+                            .build());
+        }
     }
 
 }

@@ -5,10 +5,12 @@ import com.sparta.schedule.dto.comment.*;
 import com.sparta.schedule.entity.Comment;
 import com.sparta.schedule.security.UserDetailsImpl;
 import com.sparta.schedule.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,9 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommonResponse<CommentResponse>> createComment(
             @PathVariable Long scheduleId,
-            @RequestBody CommentRequest request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @Valid @RequestBody CommentRequest request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            BindingResult bindingResult
     ) {
         Comment comment = commentService.createComment(scheduleId, request, userDetails.getUser());
         CommentResponse response = new CommentResponse(comment);
@@ -82,8 +85,9 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseEntity<CommonResponse<CommentResponse>> updateComment(
             @PathVariable Long commentId,
-            @RequestBody CommentRequest request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @Valid @RequestBody CommentRequest request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            BindingResult bindingResult
     ) {
         Comment comment = commentService.updateComment(commentId, request, userDetails.getUser());
         CommentResponse response = new CommentResponse(comment);

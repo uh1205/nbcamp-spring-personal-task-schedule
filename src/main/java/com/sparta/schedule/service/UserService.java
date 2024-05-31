@@ -21,14 +21,14 @@ public class UserService {
         // username 중복 확인
         String username = request.getUsername();
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+            throw new IllegalArgumentException("Username " + username + " already exists");
         }
 
         // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (request.isAdmin()) {
             if (!request.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+                throw new IllegalArgumentException("Admin token does not match");
             }
             role = UserRoleEnum.ADMIN;
         }
