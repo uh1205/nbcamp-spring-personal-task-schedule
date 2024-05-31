@@ -33,14 +33,13 @@ public class UserController {
     ) throws IllegalArgumentException {
         // 예외 처리
         if (bindingResult.hasErrors()) {
-            return getFieldErrorResponseEntity(bindingResult, "Failed to sign up");
+            return getFieldErrorResponseEntity(bindingResult, "Failed to signup");
         }
-
         try {
             User user = userService.signup(request);
             SignupResponse response = new SignupResponse(user);
 
-            return getResponseEntity(response, "Successfully signed up");
+            return getResponseEntity(response, "Signup successful");
 
         } catch (Exception e) {
             return getBadRequestResponseEntity(e);
