@@ -25,15 +25,15 @@ public class ScheduleController {
      * 새로운 일정 생성
      */
     @PostMapping
-    public ResponseEntity<CommonResponse<CreateScheduleResponse>> createSchedule(
-            @Valid @RequestBody CreateScheduleRequest request,
+    public ResponseEntity<CommonResponse<ScheduleResponse>> createSchedule(
+            @Valid @RequestBody ScheduleRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         Schedule schedule = scheduleService.createSchedule(request, userDetails.getUser());
-        CreateScheduleResponse response = new CreateScheduleResponse(schedule);
+        ScheduleResponse response = new ScheduleResponse(schedule);
 
         return ResponseEntity.ok()
-                .body(CommonResponse.<CreateScheduleResponse>builder()
+                .body(CommonResponse.<ScheduleResponse>builder()
                         .statusCode(HttpStatus.OK.value())
                         .msg("일정 생성 성공")
                         .data(response)
@@ -41,15 +41,15 @@ public class ScheduleController {
     }
 
     /**
-     * 모든 일정 불러오기
+     * 모든 일정 조회
      */
     @GetMapping
-    public ResponseEntity<CommonResponse<List<ReadScheduleResponse>>> getSchedules() {
-        List<ReadScheduleResponse> response = scheduleService.getSchedules()
-                .stream().map(ReadScheduleResponse::new).toList();
+    public ResponseEntity<CommonResponse<List<ScheduleResponse>>> getSchedules() {
+        List<ScheduleResponse> response = scheduleService.getSchedules()
+                .stream().map(ScheduleResponse::new).toList();
 
         return ResponseEntity.ok()
-                .body(CommonResponse.<List<ReadScheduleResponse>>builder()
+                .body(CommonResponse.<List<ScheduleResponse>>builder()
                         .statusCode(HttpStatus.OK.value())
                         .msg("모든 일정 불러오기 성공")
                         .data(response)
@@ -57,15 +57,15 @@ public class ScheduleController {
     }
 
     /**
-     * 해당 일정 불러오기
+     * 일정 조회
      */
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse<ReadScheduleResponse>> getSchedule(@PathVariable Long scheduleId) {
+    public ResponseEntity<CommonResponse<ScheduleResponse>> getSchedule(@PathVariable Long scheduleId) {
         Schedule schedule = scheduleService.getSchedule(scheduleId);
-        ReadScheduleResponse response = new ReadScheduleResponse(schedule);
+        ScheduleResponse response = new ScheduleResponse(schedule);
 
         return ResponseEntity.ok()
-                .body(CommonResponse.<ReadScheduleResponse>builder()
+                .body(CommonResponse.<ScheduleResponse>builder()
                         .statusCode(HttpStatus.OK.value())
                         .msg("일정 불러오기 성공")
                         .data(response)
@@ -73,19 +73,19 @@ public class ScheduleController {
     }
 
     /**
-     * 해당 일정 수정
+     * 일정 수정
      */
     @PutMapping("/{scheduleId}")
-    public ResponseEntity<CommonResponse<UpdateScheduleResponse>> updateSchedule(
+    public ResponseEntity<CommonResponse<ScheduleResponse>> updateSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody UpdateScheduleRequest request,
+            @RequestBody ScheduleRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         Schedule schedule = scheduleService.updateSchedule(scheduleId, request, userDetails.getUser());
-        UpdateScheduleResponse response = new UpdateScheduleResponse(schedule);
+        ScheduleResponse response = new ScheduleResponse(schedule);
 
         return ResponseEntity.ok()
-                .body(CommonResponse.<UpdateScheduleResponse>builder()
+                .body(CommonResponse.<ScheduleResponse>builder()
                         .statusCode(HttpStatus.OK.value())
                         .msg("일정 수정 성공")
                         .data(response)
@@ -93,7 +93,7 @@ public class ScheduleController {
     }
 
     /**
-     * 해당 일정 삭제
+     * 일정 삭제
      */
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<CommonResponse<Long>> deleteSchedule(

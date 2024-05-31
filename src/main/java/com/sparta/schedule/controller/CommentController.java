@@ -15,24 +15,25 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comments")
+@RequestMapping("/schedules/{scheduleId}/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
     /**
-     * 해당 일정에 새로운 댓글 추가
+     * 새로운 댓글 생성 후 해당 일정에 추가
      */
     @PostMapping
-    public ResponseEntity<CommonResponse<CreateCommentResponse>> createComment(
-            @RequestBody CreateCommentRequest request,
+    public ResponseEntity<CommonResponse<CommentResponse>> createComment(
+            @PathVariable Long scheduleId,
+            @RequestBody CommentRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        Comment comment = commentService.createComment(request, userDetails.getUser());
-        CreateCommentResponse response = new CreateCommentResponse(comment);
+        Comment comment = commentService.createComment(scheduleId, request, userDetails.getUser());
+        CommentResponse response = new CommentResponse(comment);
 
         return ResponseEntity.ok()
-                .body(CommonResponse.<CreateCommentResponse>builder()
+                .body(CommonResponse.<CommentResponse>builder()
                         .statusCode(HttpStatus.OK.value())
                         .msg("댓글 추가 성공")
                         .data(response)
@@ -40,15 +41,17 @@ public class CommentController {
     }
 
     /**
-     * 해당 일정의 모든 댓글 불러오기
+     * 모든 댓글 조회
      */
     @GetMapping
-    public ResponseEntity<CommonResponse<List<ReadCommentResponse>>> getComments(@RequestParam Long scheduleId) {
-        List<ReadCommentResponse> response = commentService.getComments(scheduleId)
-                .stream().map(ReadCommentResponse::new).toList();
+    public ResponseEntity<CommonResponse<List<CommentResponse>>> getComments(
+            @PathVariable Long scheduleId
+    ) {
+        List<CommentResponse> response = commentService.getComments(scheduleId)
+                .stream().map(CommentResponse::new).toList();
 
         return ResponseEntity.ok()
-                .body(CommonResponse.<List<ReadCommentResponse>>builder()
+                .body(CommonResponse.<List<CommentResponse>>builder()
                         .statusCode(HttpStatus.OK.value())
                         .msg("모든 댓글 불러오기 성공")
                         .data(response)
@@ -56,19 +59,37 @@ public class CommentController {
     }
 
     /**
-     * 해당 댓글 수정
+     * 댓글 조회
+     */
+    @GetMapping("/{commentId}")
+    public ResponseEntity<CommonResponse<CommentResponse>> getComment(
+            @PathVariable Long commentId
+    ) {
+        Comment comment = commentService.getComment(commentId);
+        CommentResponse response = new CommentResponse(comment);
+
+        return ResponseEntity.ok()
+                .body(CommonResponse.<CommentResponse>builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .msg("댓글 불러오기 성공")
+                        .data(response)
+                        .build());
+    }
+
+    /**
+     * 댓글 수정
      */
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommonResponse<UpdateCommentResponse>> updateComment(
+    public ResponseEntity<CommonResponse<CommentResponse>> updateComment(
             @PathVariable Long commentId,
-            @RequestBody UpdateCommentRequest request,
+            @RequestBody CommentRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         Comment comment = commentService.updateComment(commentId, request, userDetails.getUser());
-        UpdateCommentResponse response = new UpdateCommentResponse(comment);
+        CommentResponse response = new CommentResponse(comment);
 
         return ResponseEntity.ok()
-                .body(CommonResponse.<UpdateCommentResponse>builder()
+                .body(CommonResponse.<CommentResponse>builder()
                         .statusCode(HttpStatus.OK.value())
                         .msg("댓글 수정 성공")
                         .data(response)
@@ -76,7 +97,7 @@ public class CommentController {
     }
 
     /**
-     * 해당 댓글 삭제
+     * 댓글 삭제
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommonResponse<Long>> deleteComment(

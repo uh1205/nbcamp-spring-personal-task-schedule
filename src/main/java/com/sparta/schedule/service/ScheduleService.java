@@ -1,7 +1,6 @@
 package com.sparta.schedule.service;
 
-import com.sparta.schedule.dto.schedule.CreateScheduleRequest;
-import com.sparta.schedule.dto.schedule.UpdateScheduleRequest;
+import com.sparta.schedule.dto.schedule.ScheduleRequest;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.entity.User;
 import com.sparta.schedule.reporitory.ScheduleRepository;
@@ -21,32 +20,31 @@ public class ScheduleService {
     /**
      * 새로운 일정 생성
      */
-    public Schedule createSchedule(CreateScheduleRequest request, User user) {
+    public Schedule createSchedule(ScheduleRequest request, User user) {
         return scheduleRepository.save(new Schedule(request, user));
     }
 
     /**
-     * 모든 일정 불러오기
+     * 모든 일정 조회
      */
     public List<Schedule> getSchedules() {
         return scheduleRepository.findAllByOrderByCreatedDateDesc();
     }
 
     /**
-     * 해당 일정 불러오기
+     * 해당 일정 조회
      */
-    public Schedule getSchedule(Long id) {
-        return scheduleRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Schedule not found")
-        );
+    public Schedule getSchedule(Long scheduleId) {
+        return scheduleRepository.findById(scheduleId).orElseThrow(() ->
+                new IllegalArgumentException("Schedule with id " + scheduleId + " does not exist"));
     }
-
+    
     /**
      * 해당 일정 수정
      */
     @Transactional
-    public Schedule updateSchedule(Long id, UpdateScheduleRequest request, User user) {
-        Schedule schedule = findScheduleAndVerifyUser(id, user);
+    public Schedule updateSchedule(Long scheduleId, ScheduleRequest request, User user) {
+        Schedule schedule = findScheduleAndVerifyUser(scheduleId, user);
         schedule.update(request);
 
         return schedule;
@@ -55,19 +53,20 @@ public class ScheduleService {
     /**
      * 해당 일정 삭제
      */
-    public Long deleteSchedule(Long id, User user) {
-        Schedule schedule = findScheduleAndVerifyUser(id, user);
+    public Long deleteSchedule(Long scheduleId, User user) {
+        Schedule schedule = findScheduleAndVerifyUser(scheduleId, user);
         scheduleRepository.delete(schedule);
 
-        return id;
+        return scheduleId;
     }
 
-    private Schedule findScheduleAndVerifyUser(Long id, User user) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 일정을 찾을 수 없습니다."));
+    // scheduleId 로 일정을 찾고, 사용자가 해당 일정의 작성자인지 검증
+    private Schedule findScheduleAndVerifyUser(Long scheduleId, User user) {
+        Schedule schedule = getSchedule(scheduleId);
 
         if (!Objects.equals(schedule.getUser().getId(), user.getId())) {
-            throw new IllegalArgumentException("해당 일정의 작성자가 아닙니다.");
+            throw new IllegalArgumentException("Schedule with id " + scheduleId +
+                    " does not belong to user with id " + user.getId());
         }
 
         return schedule;

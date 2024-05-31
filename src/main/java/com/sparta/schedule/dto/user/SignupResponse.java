@@ -2,11 +2,11 @@ package com.sparta.schedule.dto.user;
 
 import com.sparta.schedule.entity.User;
 import com.sparta.schedule.entity.UserRoleEnum;
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDate;
 
-@Getter
+@Data
 public class SignupResponse {
 
     private final Long userId;

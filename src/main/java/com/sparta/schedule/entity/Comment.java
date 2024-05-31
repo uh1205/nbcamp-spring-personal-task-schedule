@@ -1,7 +1,6 @@
 package com.sparta.schedule.entity;
 
-import com.sparta.schedule.dto.comment.CreateCommentRequest;
-import com.sparta.schedule.dto.comment.UpdateCommentRequest;
+import com.sparta.schedule.dto.comment.CommentRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,13 +26,13 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
-    public Comment(CreateCommentRequest request, User user, Schedule schedule) {
+    public Comment(CommentRequest request, User user, Schedule schedule) {
         this.content = request.getContent();
         this.user = user;
         this.schedule = schedule;
     }
 
-    public void update(UpdateCommentRequest request) {
+    public void update(CommentRequest request) {
         this.content = request.getContent();
     }
 }
