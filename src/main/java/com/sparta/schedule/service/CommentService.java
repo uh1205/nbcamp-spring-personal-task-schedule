@@ -40,17 +40,24 @@ public class CommentService {
     /**
      * 해당 댓글 조회
      */
-    public Comment getComment(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(() ->
+    public Comment getComment(Long scheduleId, Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
                 new IllegalArgumentException("Comment with id " + commentId + " does not exist"));
+
+        if (!Objects.equals(scheduleId, comment.getSchedule().getId())) {
+            throw new IllegalArgumentException("Comment with id " + commentId +
+                    " does not belong to schedule with id " + scheduleId);
+        }
+
+        return comment;
     }
 
     /**
      * 해당 댓글 수정
      */
     @Transactional
-    public Comment updateComment(Long commentId, CommentRequest request, User user) {
-        Comment comment = findCommentAndVerifyUser(commentId, user);
+    public Comment updateComment(Long scheduleId, Long commentId, CommentRequest request, User user) {
+        Comment comment = findCommentAndVerifyUser(scheduleId, commentId, user);
         comment.update(request);
 
         return comment;
@@ -59,16 +66,15 @@ public class CommentService {
     /**
      * 해당 댓글 삭제
      */
-    public Long deleteComment(Long commentId, User user) {
-        Comment comment = findCommentAndVerifyUser(commentId, user);
+    public Long deleteComment(Long scheduleId, Long commentId, User user) {
+        Comment comment = findCommentAndVerifyUser(scheduleId, commentId, user);
         commentRepository.delete(comment);
 
         return commentId;
     }
 
-    // commentId 로 댓글을 찾고, 사용자가 해당 댓글의 작성자인지 검증
-    private Comment findCommentAndVerifyUser(Long commentId, User user) {
-        Comment comment = getComment(commentId);
+    private Comment findCommentAndVerifyUser(Long scheduleId, Long commentId, User user) {
+        Comment comment = getComment(scheduleId, commentId);
 
         if (!Objects.equals(comment.getUser().getId(), user.getId())) {
             throw new IllegalArgumentException("Comment with id " + commentId +

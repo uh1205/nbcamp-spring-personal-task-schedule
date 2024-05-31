@@ -67,10 +67,11 @@ public class CommentController {
      */
     @GetMapping("/{commentId}")
     public ResponseEntity<CommonResponse<?>> getComment(
+            @PathVariable Long scheduleId,
             @PathVariable Long commentId
     ) throws IllegalArgumentException {
         try {
-            Comment comment = commentService.getComment(commentId);
+            Comment comment = commentService.getComment(scheduleId, commentId);
             CommentResponse response = new CommentResponse(comment);
 
             return getResponseEntity(response, "Retrieved comment successfully");
@@ -85,6 +86,7 @@ public class CommentController {
      */
     @PutMapping("/{commentId}")
     public ResponseEntity<CommonResponse<?>> updateComment(
+            @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentRequest request,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -95,7 +97,7 @@ public class CommentController {
             return getFieldErrorResponseEntity(bindingResult, "Failed to update comment");
         }
         try {
-            Comment comment = commentService.updateComment(commentId, request, userDetails.getUser());
+            Comment comment = commentService.updateComment(scheduleId, commentId, request, userDetails.getUser());
             CommentResponse response = new CommentResponse(comment);
 
             return getResponseEntity(response, "Comment updated successfully");
@@ -110,11 +112,12 @@ public class CommentController {
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommonResponse<?>> deleteComment(
+            @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) throws IllegalArgumentException {
         try {
-            Long response = commentService.deleteComment(commentId, userDetails.getUser());
+            Long response = commentService.deleteComment(scheduleId, commentId, userDetails.getUser());
 
             return getResponseEntity(response, "Comment deleted successfully");
 

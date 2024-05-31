@@ -60,7 +60,6 @@ public class ScheduleService {
         return scheduleId;
     }
 
-    // scheduleId 로 일정을 찾고, 사용자가 해당 일정의 작성자인지 검증
     private Schedule findScheduleAndVerifyUser(Long scheduleId, User user) {
         Schedule schedule = getSchedule(scheduleId);
 
