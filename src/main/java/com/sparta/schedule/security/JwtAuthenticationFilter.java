@@ -58,6 +58,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = jwtProvider.createToken(username, role);
         res.addHeader(JwtProvider.AUTHORIZATION_HEADER, token);
+        log.info("로그인 성공 : {}", username);
     }
 
     /**
@@ -65,7 +66,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse res, AuthenticationException failed) {
-        log.error(failed.getMessage());
+        log.error("로그인 실패 : {}", failed.getMessage());
         res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
