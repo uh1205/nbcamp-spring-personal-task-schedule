@@ -7,6 +7,9 @@ import lombok.Data;
 public class CommentRequest {
 
     @NotBlank
+    private Long scheduleId;
+
+    @NotBlank
     private String content;
 
 }

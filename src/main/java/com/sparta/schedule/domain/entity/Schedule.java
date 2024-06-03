@@ -56,6 +56,15 @@ public class Schedule extends Timestamped {
     }
 
     /**
+     * 검증 메서드
+     */
+    public void verify(User user) {
+        if (!this.user.equals(user)) {
+            throw new IllegalArgumentException("User does not belong to this schedule");
+        }
+    }
+
+    /**
      * 수정 메서드
      */
     public void update(ScheduleRequest request) {

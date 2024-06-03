@@ -1,9 +1,9 @@
 package com.sparta.schedule.controller;
 
+import com.sparta.schedule.domain.entity.Comment;
 import com.sparta.schedule.dto.CommonResponse;
 import com.sparta.schedule.dto.comment.CommentRequest;
 import com.sparta.schedule.dto.comment.CommentResponse;
-import com.sparta.schedule.domain.entity.Comment;
 import com.sparta.schedule.security.UserDetailsImpl;
 import com.sparta.schedule.service.CommentService;
 import jakarta.validation.Valid;
@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.sparta.schedule.controller.ControllerUtils.*;
 
@@ -34,12 +35,14 @@ public class CommentController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             BindingResult bindingResult
     ) throws IllegalArgumentException {
-        // 예외 처리
+        // 바인딩 예외 처리
         if (bindingResult.hasErrors()) {
             return getFieldErrorResponseEntity(bindingResult, "Failed to create comment");
         }
         try {
-            Comment comment = commentService.createComment(scheduleId, request, userDetails.getUser());
+            verifyPathVariable(scheduleId, request);
+
+            Comment comment = commentService.createComment(request, userDetails.getUser());
             CommentResponse response = new CommentResponse(comment);
 
             return getResponseEntity(response, "Comment created successfully");
@@ -92,11 +95,13 @@ public class CommentController {
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             BindingResult bindingResult
     ) throws IllegalArgumentException {
-        // 예외 처리
+        // 바인딩 예외 처리
         if (bindingResult.hasErrors()) {
             return getFieldErrorResponseEntity(bindingResult, "Failed to update comment");
         }
         try {
+            verifyPathVariable(scheduleId, request);
+
             Comment comment = commentService.updateComment(scheduleId, commentId, request, userDetails.getUser());
             CommentResponse response = new CommentResponse(comment);
 
@@ -123,6 +128,15 @@ public class CommentController {
 
         } catch (Exception e) {
             return getBadRequestResponseEntity(e);
+        }
+    }
+
+    /**
+     * PathVariable scheduleId가 RequestBody scheduleId와 같은지 검증
+     */
+    private static void verifyPathVariable(Long scheduleId, CommentRequest request) {
+        if (!Objects.equals(scheduleId, request.getScheduleId())) {
+            throw new IllegalArgumentException("Schedule id does not match");
         }
     }
 

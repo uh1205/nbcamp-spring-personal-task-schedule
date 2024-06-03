@@ -31,7 +31,7 @@ public class UserController {
             @Valid @RequestBody SignupRequest request,
             BindingResult bindingResult
     ) throws IllegalArgumentException {
-        // 예외 처리
+        // 바인딩 예외 처리
         if (bindingResult.hasErrors()) {
             return getFieldErrorResponseEntity(bindingResult, "Failed to signup");
         }

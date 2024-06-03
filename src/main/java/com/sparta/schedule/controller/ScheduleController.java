@@ -40,6 +40,7 @@ public class ScheduleController {
         try {
             Schedule schedule = scheduleService.createSchedule(request, userDetails.getUser());
             ScheduleResponse response = new ScheduleResponse(schedule);
+
             return getResponseEntity(response, "Schedule created successfully");
 
         } catch (Exception e) {

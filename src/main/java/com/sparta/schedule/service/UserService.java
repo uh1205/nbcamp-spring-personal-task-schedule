@@ -14,11 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     private final PasswordEncoder passwordEncoder;
-
-    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final UserRepository userRepository;
 
     /**
      * 회원가입
@@ -40,12 +39,11 @@ public class UserService {
             role = UserRoleEnum.ADMIN;
         }
 
-        // 사용자 등록
-        String nickname = request.getNickname();
-//        String password = request.getPassword();
+        // 비밀번호 암호화
         String password = passwordEncoder.encode(request.getPassword());
 
-        User user = new User(nickname, username, password, role);
+        // 사용자 등록
+        User user = new User(request.getNickname(), username, password, role);
         userRepository.save(user);
 
         return user;

@@ -61,4 +61,5 @@ public class User extends Timestamped {
         comments.add(comment);
         comment.setUser(this);
     }
+
 }

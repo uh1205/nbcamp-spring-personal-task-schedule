@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class Comment extends Timestamped {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -28,10 +29,16 @@ public class Comment extends Timestamped {
     /**
      * 생성자
      */
-    public Comment(CommentRequest request, User user, Schedule schedule) {
-        this.content = request.getContent();
-        this.user = user;
-        this.schedule = schedule;
+    public static Comment createComment(CommentRequest request, Schedule schedule, User user) {
+        Comment comment = new Comment(request.getContent());
+        comment.setSchedule(schedule);
+        comment.setUser(user);
+
+        return comment;
+    }
+
+    private Comment(String content) {
+        this.content = content;
     }
 
     protected Comment() {
@@ -48,6 +55,21 @@ public class Comment extends Timestamped {
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
         schedule.addComment(this);
+    }
+
+    /**
+     * 검증 메서드
+     */
+    public void verify(Long scheduleId) {
+        if (!this.schedule.getId().equals(scheduleId)) {
+            throw new IllegalArgumentException("Schedule does not belong to this comment");
+        }
+    }
+
+    public void verify(User user) {
+        if (!this.user.equals(user)) {
+            throw new IllegalArgumentException("User does not belong to this comment");
+        }
     }
 
     /**
