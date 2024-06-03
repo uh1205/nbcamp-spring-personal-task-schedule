@@ -69,7 +69,6 @@ public class WebSecurityConfig {
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/users/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/schedules/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
                 .anyRequest().authenticated()
         );
 
