@@ -3,7 +3,7 @@ package com.sparta.schedule.controller;
 import com.sparta.schedule.dto.CommonResponse;
 import com.sparta.schedule.dto.user.SignupRequest;
 import com.sparta.schedule.dto.user.SignupResponse;
-import com.sparta.schedule.entity.User;
+import com.sparta.schedule.domain.entity.User;
 import com.sparta.schedule.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

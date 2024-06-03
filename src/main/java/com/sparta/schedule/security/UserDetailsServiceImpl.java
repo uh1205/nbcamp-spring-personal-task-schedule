@@ -1,6 +1,6 @@
 package com.sparta.schedule.security;
 
-import com.sparta.schedule.entity.User;
+import com.sparta.schedule.domain.entity.User;
 import com.sparta.schedule.reporitory.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

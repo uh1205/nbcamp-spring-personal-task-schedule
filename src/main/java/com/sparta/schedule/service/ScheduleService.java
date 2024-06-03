@@ -1,8 +1,8 @@
 package com.sparta.schedule.service;
 
 import com.sparta.schedule.dto.schedule.ScheduleRequest;
-import com.sparta.schedule.entity.Schedule;
-import com.sparta.schedule.entity.User;
+import com.sparta.schedule.domain.entity.Schedule;
+import com.sparta.schedule.domain.entity.User;
 import com.sparta.schedule.reporitory.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

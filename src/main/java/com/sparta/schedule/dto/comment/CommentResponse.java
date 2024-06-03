@@ -1,6 +1,6 @@
 package com.sparta.schedule.dto.comment;
 
-import com.sparta.schedule.entity.Comment;
+import com.sparta.schedule.domain.entity.Comment;
 import lombok.Data;
 
 import java.time.LocalDate;

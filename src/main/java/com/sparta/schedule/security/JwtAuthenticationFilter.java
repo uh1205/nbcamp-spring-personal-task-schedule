@@ -2,7 +2,7 @@ package com.sparta.schedule.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.schedule.dto.user.LoginRequest;
-import com.sparta.schedule.entity.UserRoleEnum;
+import com.sparta.schedule.domain.UserRoleEnum;
 import com.sparta.schedule.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

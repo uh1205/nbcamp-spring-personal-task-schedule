@@ -1,9 +1,9 @@
 package com.sparta.schedule.service;
 
 import com.sparta.schedule.dto.comment.CommentRequest;
-import com.sparta.schedule.entity.Comment;
-import com.sparta.schedule.entity.Schedule;
-import com.sparta.schedule.entity.User;
+import com.sparta.schedule.domain.entity.Comment;
+import com.sparta.schedule.domain.entity.Schedule;
+import com.sparta.schedule.domain.entity.User;
 import com.sparta.schedule.reporitory.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CommentService {
 
@@ -22,12 +23,12 @@ public class CommentService {
     /**
      * 해당 일정에 새로운 댓글 추가
      */
+    @Transactional
     public Comment createComment(Long scheduleId, CommentRequest request, User user) {
         Schedule schedule = scheduleService.getSchedule(scheduleId);
-        Comment comment = commentRepository.save(new Comment(request, user, schedule));
-        schedule.addComment(comment);
+        Comment comment = new Comment(request, user, schedule);
 
-        return comment;
+        return commentRepository.save(comment);
     }
 
     /**
@@ -66,6 +67,7 @@ public class CommentService {
     /**
      * 해당 댓글 삭제
      */
+    @Transactional
     public Long deleteComment(Long scheduleId, Long commentId, User user) {
         Comment comment = findCommentAndVerifyUser(scheduleId, commentId, user);
         commentRepository.delete(comment);

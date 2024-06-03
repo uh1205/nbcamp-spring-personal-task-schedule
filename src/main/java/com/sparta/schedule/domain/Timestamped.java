@@ -1,4 +1,4 @@
-package com.sparta.schedule.entity;
+package com.sparta.schedule.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,22 +1,29 @@
 package com.sparta.schedule.service;
 
 import com.sparta.schedule.dto.user.SignupRequest;
-import com.sparta.schedule.entity.User;
-import com.sparta.schedule.entity.UserRoleEnum;
+import com.sparta.schedule.domain.entity.User;
+import com.sparta.schedule.domain.UserRoleEnum;
 import com.sparta.schedule.reporitory.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
-    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
-
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
+    private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+
+    /**
+     * 회원가입
+     */
+    @Transactional
     public User signup(SignupRequest request) {
         // username 중복 확인
         String username = request.getUsername();

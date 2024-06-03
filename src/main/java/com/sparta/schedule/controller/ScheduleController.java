@@ -3,7 +3,7 @@ package com.sparta.schedule.controller;
 import com.sparta.schedule.dto.CommonResponse;
 import com.sparta.schedule.dto.schedule.ScheduleRequest;
 import com.sparta.schedule.dto.schedule.ScheduleResponse;
-import com.sparta.schedule.entity.Schedule;
+import com.sparta.schedule.domain.entity.Schedule;
 import com.sparta.schedule.security.UserDetailsImpl;
 import com.sparta.schedule.service.ScheduleService;
 import jakarta.validation.Valid;

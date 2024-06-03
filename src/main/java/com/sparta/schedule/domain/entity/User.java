@@ -1,15 +1,15 @@
-package com.sparta.schedule.entity;
+package com.sparta.schedule.domain.entity;
 
+import com.sparta.schedule.domain.Timestamped;
+import com.sparta.schedule.domain.UserRoleEnum;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class User extends Timestamped {
 
     @Id
@@ -30,16 +30,35 @@ public class User extends Timestamped {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "user")
-    private final List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Schedule> schedules = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Comment> comments = new ArrayList<>();
+
+    /**
+     * 생성자
+     */
     public User(String nickname, String username, String password, UserRoleEnum role) {
         this.nickname = nickname;
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    protected User() {
+    }
+
+    /**
+     * 연관관계 편의 메서드
+     */
+    public void addSchedule(Schedule schedule) {
+        this.schedules.add(schedule);
+        schedule.setUser(this);
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setUser(this);
     }
 }

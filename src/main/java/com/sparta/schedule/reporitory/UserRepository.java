@@ -1,6 +1,6 @@
 package com.sparta.schedule.reporitory;
 
-import com.sparta.schedule.entity.User;
+import com.sparta.schedule.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
